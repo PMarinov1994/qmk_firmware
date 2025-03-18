@@ -1,8 +1,11 @@
 #include <stdint.h>
 #include "action_layer.h"
+#include "config.h"
 #include "keycodes.h"
 #include "keymap_us.h"
+#include "oled_driver.h"
 #include "quantum_keycodes.h"
+#include "screen_art.h"
 #include QMK_KEYBOARD_H
 
 enum layer_number {
@@ -32,17 +35,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
  * |LCtrl |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |LCtrl |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RAlt |
+ *                   | LGUI | LAlt |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RAlt |
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
 
 [_QWERTY] = LAYOUT(
-  KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                             KC_6,       KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,
-  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                             KC_Y,       KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-  KC_ESC, GUI_T(KC_A), ALT_T(KC_S), SFT_T(KC_D), CTL_T(KC_F), KC_G,      KC_H, CTL_T(KC_J),  SFT_T(KC_K), ALT_T(KC_L),  GUI_T(KC_SCLN), KC_QUOT,
+  KC_GRV,   KC_1,   KC_2, KC_3,    KC_4,    KC_5,                             KC_6,       KC_7,         KC_8,        KC_9,         KC_0,           KC_EQL,
+  KC_TAB,   KC_Q,   KC_W, KC_E,    KC_R,    KC_T,                             KC_Y,       KC_U,         KC_I,        KC_O,         KC_P,           KC_MINS,
+  KC_ESC,   KC_A,   KC_S, SFT_T(KC_D), CTL_T(KC_F), KC_G,                     KC_H,       CTL_T(KC_J),  SFT_T(KC_K), ALT_T(KC_L),  GUI_T(KC_SCLN), KC_QUOT,
   KC_LCTL,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,              KC_RBRC,  KC_N,   KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RCTL,
-                       KC_LALT, KC_LGUI, MO(_L1), KC_SPC,                    KC_ENT, LT(_L1, KC_NO), KC_BSPC, KC_BSPC
+                       KC_LGUI, KC_LALT, MO(_L1), KC_SPC,                    KC_ENT, KC_BSPC, LT(_L1, KC_NO), KC_BSPC
 ),
 
 
@@ -59,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |ESC/SF|   !  |   @  |   #  |   $  |   %  |-------.    ,-------|   ^  |   &  |   *  |   (  |   )  |   ~  |
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
- * |LCtrl |   ?  |      |   ~  |   /  |      |-------|    |-------|   \  |   _  |   +  |   {  |   }  |   |  |
+ * |LCtrl |   ?  |      |   ~  |   /  |  =   |-------|    |-------|   \  |   _  |   +  |   {  |   }  |   |  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -69,8 +72,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,       _______, _______, _______, _______, _______,                   _______, _______, _______,_______, _______, _______,
   KC_F1,         KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,
   SFT_T(KC_ESC), KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                   KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD,
-  _______,       KC_QUES, _______, KC_TILD, KC_SLSH, _______, _______, _______, KC_BSLS, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
-                                   _______, _______, XXXXXXX, _______, _______, XXXXXXX, _______, _______
+  _______,       KC_QUES, _______, KC_TILD, KC_SLSH, KC_EQL,  _______, _______, KC_BSLS, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
+                                   _______, _______, XXXXXXX, _______, _______, _______, XXXXXXX, _______
 ),
 
 
@@ -95,11 +98,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_L2] = LAYOUT(
-  KC_PSCR, _______,    _______,    _______,        _______,       _______,                          _______, _______,        _______,      _______,           _______, XXXXXXX,
-  KC_TAB,  KC_1,       KC_2,       KC_3,           KC_4,          KC_5,                             KC_6,    KC_7,           KC_8,         KC_9,              KC_0,    XXXXXXX,
-  _______, LCTL(KC_C), LCTL(KC_V), SFT_T(KC_HOME), CTL_T(KC_END), KC_DEL,                           KC_LEFT, CTL_T(KC_DOWN), SFT_T(KC_UP), ALT_T(KC_RGHT),    KC_RGUI, XXXXXXX,
-  _______, RCS(KC_C),  RCS(KC_V),  KC_PGDN,        KC_PGUP,       XXXXXXX,  KC_UNDO,    LCTL(KC_Y), KC_PLUS, KC_MINS,        KC_COMMA,     KC_DOT,            KC_EQL,  KC_SLASH,
-                                                _______, _______, TG(_L2),  _______,    _______,  XXXXXXX, _______, KC_RGUI
+  KC_PSCR, _______,    _______,    _______,        _______,       _______,                         _______, _______,        _______,      _______,        _______, KC_TG_LAYER_GAMING,
+  KC_TAB,  KC_1,       KC_2,       KC_3,           KC_4,          KC_5,                            KC_6,    KC_7,           KC_8,         KC_9,           KC_0,    XXXXXXX,
+  _______, LCTL(KC_C), LCTL(KC_V), SFT_T(KC_HOME), CTL_T(KC_END), KC_DEL,                          KC_LEFT, CTL_T(KC_DOWN), SFT_T(KC_UP), ALT_T(KC_RGHT), KC_RGUI, XXXXXXX,
+  _______, RCS(KC_C),  RCS(KC_V),  KC_PGDN,        KC_PGUP,       XXXXXXX, LCTL(KC_Z),    LCTL(KC_Y), KC_PLUS, KC_MINS,        KC_COMMA,     KC_DOT,         KC_EQL,  KC_SLASH,
+                                                _______, _______, TG(_L2), _______,    _______,    _______, XXXXXXX, KC_RGUI
 ),
 
 
@@ -124,11 +127,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_GAMING] = LAYOUT(
-  KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_TG_LAYER_GAMING,
-  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-  KC_ESC,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-  KC_LCTL,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RCTL,
-                    XXXXXXX, KC_LSFT, KC_LALT,  KC_SPC,  KC_ENT, XXXXXXX, KC_BSPC, KC_RGUI
+  KC_GRV,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_TG_LAYER_GAMING,
+  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+  KC_ESC,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+  KC_LCTL,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_P,            KC_RBRC,   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RCTL,
+                          KC_LSFT, KC_LSFT, KC_LALT, KC_SPC,          KC_ENT, KC_BSPC, XXXXXXX, KC_RGUI
   )
 };
 
@@ -151,8 +154,32 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   return rotation;
 }
 
+
 // When you add source files to SRC in rules.mk, you can use functions.
-const char *read_layer_state(void);
+char layer_state_str[24];
+const char *read_layer_state(void) {
+  uint8_t current_layer = get_highest_layer(layer_state);
+  switch (current_layer) {
+    case _QWERTY:
+      snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Base");
+      break;
+    case _L1:
+      snprintf(layer_state_str, sizeof(layer_state_str), "Layer: _L1");
+      break;
+    case _L2:
+      snprintf(layer_state_str, sizeof(layer_state_str), "Layer: _L2");
+      break;
+    case _GAMING:
+      snprintf(layer_state_str, sizeof(layer_state_str), "Layer: _GAMING");
+      break;
+    default:
+      snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Unknown");
+      break;
+  }
+
+  return layer_state_str;
+}
+
 const char *read_logo(void);
 void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
@@ -163,15 +190,33 @@ const char *read_keylogs(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
+const unsigned char *get_layer_art(void) {
+  uint8_t current_layer = get_highest_layer(layer_state);
+  switch (current_layer) {
+    case _QWERTY:
+      return img_layer_one;
+    case _L1:
+      return img_layer_two;
+    case _L2:
+      return img_layer_three;
+    case _GAMING:
+      return img_layer_four;
+    default:
+      return img_empty;
+  }
+}
+
+
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
-    oled_write_ln(read_layer_state(), false);
-    oled_write_ln(read_keylog(), false);
-    oled_write_ln(read_keylogs(), false);
+    // oled_write_ln(read_layer_state(), false);
+    oled_set_cursor(0, 0);
+
+    const unsigned char *img = get_layer_art();
+    oled_write_raw_P((const char *) img, IMG_BUFF_SIZE);
+
     //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
-    //oled_write_ln(read_host_led_state(), false);
-    //oled_write_ln(read_timelog(), false);
   } else {
     oled_write(read_logo(), false);
   }
@@ -240,7 +285,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           layer_move(_GAMING);
         else {
           layer_move(_QWERTY);
-          layer_on(_L1);
           layer_on(_L2);
         }
 
