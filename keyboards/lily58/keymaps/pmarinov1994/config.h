@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define QUICK_TAP_TERM 160
+#define QUICK_TAP_TERM 200
 #define TAPPING_TERM QUICK_TAP_TERM
 
 #define TAPPING_TOGGLE 2
