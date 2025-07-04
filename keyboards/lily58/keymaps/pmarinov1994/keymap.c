@@ -100,7 +100,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_L2] = LAYOUT(
   KC_PSCR, _______,    _______,    _______,        _______,       _______,                     _______, _______,        _______,      _______, _______, KC_TG_LAYER_GAMING,
   KC_TAB,  KC_1,       KC_2,       KC_3,           KC_4,          KC_5,                        KC_6,    KC_7,           KC_8,         KC_9,    KC_0,    XXXXXXX,
-  _______, LCTL(KC_C), LCTL(KC_V), SFT_T(KC_HOME), CTL_T(KC_END), KC_DEL,                      KC_LEFT, CTL_T(KC_DOWN), SFT_T(KC_UP), KC_RGHT, KC_RGUI, XXXXXXX,
+  _______, LCTL(KC_C), LCTL(KC_V), SFT_T(KC_HOME), CTL_T(KC_END), KC_DEL,                      KC_LEFT, CTL_T(KC_DOWN), SFT_T(KC_UP), KC_RGHT, LALT(KC_TAB), LALT(KC_GRV),
   _______, RCS(KC_C),  RCS(KC_V),  KC_PGDN,        KC_PGUP,       XXXXXXX, LCTL(KC_Z),    LCTL(KC_Y), KC_PLUS, KC_MINS,        KC_COMMA,     KC_DOT,    KC_EQL,  KC_SLASH,
                                                    _______, _______, KC_BSPC, _______,    _______,    XXXXXXX, _______, _______
 ),
